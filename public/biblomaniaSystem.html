@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Marhey:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+
+    <title>Biblomania System</title>
+  </head>
+  <body>
+    <header>
+      <!-- <p><span>BIBLIOMANIA STORE - </span> <span>ببلومانيا</span></p> -->
+    </header>
+    <main>
+      <div class="right-part">
+        <div class="top-form-section">
+          <div class="add-order-title active">
+            <p class="title">أضف اوردر جديد</p>
+          </div>
+          <div class="add-payment-title">
+            <p class="title">أضف مصروفات جديده</p>
+          </div>
+        </div>
+        <div class="add-order">
+          <form action="/submit-form" class="form" method="post">
+            <div class="split-inputs">
+              <div class="input-data">
+                <label for="">اسم العميل</label>
+                <input type="text" name="اسم العميل" id="" placeholder="اسم العميل" required/>
+              </div>
+              <div class="input-data">
+                <label for="">العنوان</label>
+                <input type="text" name="العنوان" id="" placeholder="العنوان" required/>
+              </div>
+            </div>
+            <div class="split-inputs">
+              <div class="input-data">
+                <label for="">الاوردر</label>
+                <textarea name="الاوردر" id="" placeholder="محتويات الاوردر" required></textarea>
+              </div>
+              <div class="input-data">
+                <label for="">ملاحظات</label>
+                <input type="text" name="الملاحظات" id="" placeholder="ملاحظات" />
+              </div>
+            </div>
+            <div class="split-inputs">
+              <div class="input-data">
+                <label for="">رقم التليفون</label>
+                <input type="text" name="رقم التليفون" id="" placeholder="رقم التليفون" required/>
+              </div>
+              <div class="input-data">
+                <label for="">التاريخ</label>
+                <input type="date" name="تاريخ الشحن" id="">
+              </div>
+            </div>
+            <div class="split-inputs">
+              <div class="input-data">
+                <label for="">مصاريف الشحن</label>
+                <input type="text" name="مصاريف الشحن" id="" placeholder="مصاريف الشحن" required>
+              </div>
+              <div class="input-data">
+                <label for="">اجمالي السعر</label>
+                <input type="text" name="اجمالي السعر" id="" placeholder="اجمالي السعر" required/>
+              </div>
+            </div>
+            <div class="shipping">
+              <div class="option">
+                <input type="radio" name="حالة الشحن" id="not-shipped" value="لم يتم الشحن"/>
+                <label for="not-shipped" class="not-shipped-label">لم يتم الشحن</label>
+              </div>
+              <div class="option">
+                <input type="radio" name="حالة الشحن" id="shipped" value="تم الشحن"/>
+                <label for="shipped" class="shipped-label">تم الشحن</label>
+              </div>
+            </div>
+            <div class="input-data">
+              <input
+                type="submit"
+                value="حفظ الاوردر"
+                class="save-order"
+              />
+            </div>
+          </form>
+        </div>
+        <div class="add-payment swap">
+          <form action="/payment" class="form" method="post">
+            <div class="split-inputs">
+              <div class="input-data">
+                <label for="">اسم التاجر</label>
+                <input type="text" name="اسم التاجر" id="" placeholder="اسم التاجر" required/>
+              </div>
+              <div class="input-data">
+                <label for="">العنوان</label>
+                <input type="text" name="العنوان" id="" placeholder="العنوان" required/>
+              </div>
+            </div>
+            <div class="split-inputs">
+              <div class="input-data">
+                <label for="">اسم الصنف</label>
+                <input type="text" name="اسم الصنف" id="" placeholder="اسم الصنف" required/>
+              </div>
+              <div class="input-data">
+                <label for="">سعر الصنف</label>
+                <input type="text" name="سعر الصنف" id="" placeholder="سعر الصنف" required/>
+              </div>
+            </div>
+            <div class="split-inputs">
+              <div class="input-data">
+                <label for="">الاجمالي</label>
+                <textarea name="الاجمالي" id="" placeholder="الاجمالي" required></textarea>
+              </div>
+              <div class="input-data">
+                <label for="">المواصلات</label>
+                <input type="text" name="المواصلات" id="" placeholder="المواصلات" required/>
+              </div>
+            </div>
+            <div class="split-inputs">
+              <div class="input-data">
+                <label for="">ملاحظات</label>
+                <input type="text" name="ملاحظات" id="" placeholder="ملاحظات" />
+              </div>
+              <div class="input-data">
+                <label for="">التاريخ</label>
+                <input type="date" name="التاريخ" id="">
+              </div>
+            </div>
+            <div class="input-data">
+              <input
+                type="submit"
+                value="حفظ"
+                class="save-order"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="left-part">
+        <div class="orders-space">
+          <div class="top-section">
+            <div class="orders-top-title">
+              <label class="orders-title active">الاوردرات</label>
+            </div>
+            <div class="orders-top-title">
+              <label class="payments-title">المصروفات</label>
+            </div>
+          </div>          
+
+          <div class="orders"></div>
+          
+          <div class="payments swap">
+          </div>
+        </div>
+      </div>
+      </div>
+    </main>
+    <input type="checkbox" name="" id="toggle">
+    <label for="toggle" id="outside-popup"></label>
+    <div class="popup-order "></div>
+  </body>
+  <script src="./main.js"></script>
+  <script src="./nodejs.js"></script>
+</html>
