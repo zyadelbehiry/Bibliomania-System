@@ -15,39 +15,89 @@ not_shipped_label.addEventListener("click", function () {
 });
 
 ////////// popup helper function /////////////////////
-function set_popup_data(allData, order_id) {
+function set_popup_data(allData, order_id, popup_type) {
+  let id = allData[order_id]["order-number"]
+    ? allData[order_id]["order-number"]
+    : allData[order_id]["payment-number"];
   let order_data = `
   <div class="info">
   <span>${
-    allData[order_id]["order-number"] ? "رقم الاوردر" : "رقم العمليه"
-  }</span><input type = "text" name = "order-number" value="${
-    allData[order_id]["order-number"]
-      ? allData[order_id]["order-number"]
-      : allData[order_id]["payment-number"]
-  }">
+    allData[order_id]["order-number"] ? "رقم الاوردر :" : "رقم العمليه :"
+  }</span>
+  ${
+    popup_type === "show"
+      ? `<span class="full-data"> ${id}</span>`
+      : `<input type = "text" name = "order-number" value="${id}">`
+  }
   </div>
 
   `;
+  // let order_data;
   for (let i = 0; i < Object.keys(allData[order_id]).length; i++) {
     if (Object.keys(allData[order_id])[i] === "order-number") {
       Object.keys(allData[order_id])[i] = "رقم الاوردر";
     } else if (Object.keys(allData[order_id])[i] === "payment-number") {
       Object.keys(allData[order_id])[i] = "رقم العمليه";
     }
+    if (Object.keys(allData[order_id])[i] === "حالة الشحن") {
+      order_data += `
+      <div class="info hidden">
+      <span>${Object.keys(allData[order_id])[i]} : </span>
+        ${
+          popup_type === "show"
+            ? `<span class="full-data"> ${
+                allData[order_id][Object.keys(allData[order_id])[i]]
+              }</span>`
+            : `<input type="text" name="${
+                Object.keys(allData[order_id])[i]
+              }" value = "${
+                allData[order_id][Object.keys(allData[order_id])[i]]
+              }">`
+        }
+      </div>
+    
+      `;
+      continue;
+    }
     if (
       Object.keys(allData[order_id])[i] !== "order-number" &&
-      Object.keys(allData[order_id])[i] !== "payment-number"
+      Object.keys(allData[order_id])[i] !== "payment-number" &&
+      Object.keys(allData[order_id])[i] !== "الاوردر"
     ) {
       order_data += `
       <div class="info">
-        <span>${
-          Object.keys(allData[order_id])[i]
-        } : </span><input type="text" name="${
-        Object.keys(allData[order_id])[i]
-      }" value="${allData[order_id][Object.keys(allData[order_id])[i]]}">
+      <span>${Object.keys(allData[order_id])[i]} : </span>
+      ${
+        popup_type === "show"
+          ? `<span class="full-data"> ${
+              allData[order_id][Object.keys(allData[order_id])[i]]
+            }</span>`
+          : `<input type="text" name="${
+              Object.keys(allData[order_id])[i]
+            }" value = "${
+              allData[order_id][Object.keys(allData[order_id])[i]]
+            }">`
+      }
       </div>
-      
+    
       `;
+    }
+    if (Object.keys(allData[order_id])[i] === "الاوردر") {
+      order_data += `
+        <div class="info on-print-hidden">
+          <span>${Object.keys(allData[order_id])[i]} : </span>${
+        popup_type === "show"
+          ? `<span class="full-data"> ${
+              allData[order_id][Object.keys(allData[order_id])[i]]
+            }</span>`
+          : `<textarea type="text" name="${
+              Object.keys(allData[order_id])[i]
+            }">${
+              allData[order_id][Object.keys(allData[order_id])[i]]
+            }</textarea>`
+      }</div>
+      
+        `;
     }
   }
   return `
@@ -73,12 +123,24 @@ function editable_inputs() {
   popup_order_inputs.forEach((e) => {
     e.disabled = false;
   });
+  const popup_order_textarea = document.querySelectorAll(
+    ".popup-order .order-full-data #popup-edit-form .info textarea"
+  );
+  popup_order_textarea.forEach((e) => {
+    e.disabled = false;
+  });
 }
 function disabled_inputs() {
   const popup_order_inputs = document.querySelectorAll(
     ".popup-order .order-full-data #popup-edit-form .info input"
   );
   popup_order_inputs.forEach((e) => {
+    e.disabled = true;
+  });
+  const popup_order_textarea = document.querySelectorAll(
+    ".popup-order .order-full-data #popup-edit-form .info textarea"
+  );
+  popup_order_textarea.forEach((e) => {
     e.disabled = true;
   });
 }
@@ -89,7 +151,11 @@ function handel_edits(edit_btns, edited_section, allData) {
       // handle popup order data
       let edited_order_number = +e.id.match(/\d+/g)[0];
       console.log(edited_order_number);
-      popup_order.innerHTML = set_popup_data(allData, edited_order_number);
+      popup_order.innerHTML = set_popup_data(
+        allData,
+        edited_order_number,
+        "edit"
+      );
       editable_inputs();
       // handle save btn
       const save_btn = document.querySelector(".popup-btns .save");
@@ -173,17 +239,53 @@ fetch("/orders.json").then((response) => {
           <i class='bx bx-expand control-icon show' id = "show-${i}"></i>
           </label>
         <label for="toggle">
-        <i class='bx bx-edit control-icon edit' id = "edit-${i}
+        <i class='bx bxs-edit control-icon edit' id = "edit-${i}
         }"></i>
         </label>
-        <i class='bx bx-message-square-x control-icon delete' id = "delete-${i}"></i>
-        <i class='bx bxs-star control-icon star ${
-          allData[i]["حالة الشحن"] === "تم الشحن" ? "shipped" : ""
-        }'></i>
+        <i class='bx bx-message-square-x control-icon delete bx-flashing-hover' id = "delete-${i}"></i>
+        <i class='bx bxs-star control-icon star bx-tada-hover ${
+          allData[i]["حالة الشحن"] === "تم الدفع" ? "shipped" : ""
+        }' id = 'star-${i}' ></i>
       </div>
     `;
       orders_container.appendChild(order_sub_details);
     }
+    let stars = document.querySelectorAll(
+      ".order-control-btns .control-icon.star"
+    );
+
+    ////////////////////// handling the stars //////////////////////
+    stars.forEach((star) => {
+      star.addEventListener("click", () => {
+        star.classList.toggle("shipped");
+        let star_id = star.id.match(/\d+/g)[0];
+        let order_id = star.parentElement.parentElement.id.match(/\d+/g)[0];
+        const data = allData[star_id];
+        if (star.classList.contains("shipped")) {
+          allData[star_id]["حالة الشحن"] = "تم الدفع";
+          console.log(allData[star_id]["order-number"]);
+          set_popup_data(allData, star_id);
+        } else {
+          allData[star_id]["حالة الشحن"] = "لم يتم الدفع";
+          set_popup_data(allData, star_id, "show");
+        }
+        let save_btn = document.querySelector(".save");
+        fetch(`/edit-order/${star_id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }).then((response) => {
+          if (response.ok) {
+            alert("Order updated successfully");
+            window.location.reload();
+          } else {
+            alert("Failed to update order");
+          }
+        });
+      });
+    });
     //////////////////////////////////////////////////////////////////////////////////
     /////////// Handling edits on orders /////////
     const popup_order = document.querySelector(".popup-order");
@@ -198,7 +300,11 @@ fetch("/orders.json").then((response) => {
     show_btn.forEach((e) => {
       e.addEventListener("click", () => {
         let showed_order_number = +e.id.match(/\d+/g)[0];
-        popup_order.innerHTML = set_popup_data(allData, showed_order_number);
+        popup_order.innerHTML = set_popup_data(
+          allData,
+          showed_order_number,
+          "show"
+        );
         disabled_inputs();
         const save_btn = document.querySelector(".popup-btns .save");
         save_btn.classList.add("hidden");
@@ -248,7 +354,11 @@ fetch("./payments.json").then((response) => {
     show_btn.forEach((e) => {
       e.addEventListener("click", () => {
         let showed_payment_number = +e.id.match(/\d+/g)[0];
-        popup_card.innerHTML = set_popup_data(allData, showed_payment_number);
+        popup_card.innerHTML = set_popup_data(
+          allData,
+          showed_payment_number,
+          "show"
+        );
         const popup_payment_inputs = document.querySelectorAll(
           ".popup-order .order-full-data #popup-edit-form .info input"
         );
